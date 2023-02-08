@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { collection, query, where, getDocs, onSnapshot, orderBy } from "firebase/firestore";
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { db } from '@/firebase';
@@ -9,10 +9,10 @@ import moment from 'moment';
 
 
 
-function search() {
-  const [searchValue, setSearchValue] = useState('');
-  const [posts,setPosts]=useState([]);
-  const [filteredPosts,setFilteredPosts]=useState([]);
+function Search() {
+  const [searchValue, setSearchValue] = React.useState('');
+  const [posts,setPosts]=React.useState([]);
+  const [filteredPosts,setFilteredPosts]=React.useState([]);
   const router = useRouter();
    console.log(searchValue)
    async function getData(){
@@ -43,7 +43,7 @@ function search() {
 //   console.log(doc.id, " => ", doc.data());
 // });
   };                                    //onClick={()=>router.push(`/${post?.id}`)}
-useEffect(()=>{
+  React.useEffect(()=>{
    getData()
 },[])
   return (
@@ -83,7 +83,7 @@ useEffect(()=>{
   );
 }
 
-export default search
+export default Search
 
 
 

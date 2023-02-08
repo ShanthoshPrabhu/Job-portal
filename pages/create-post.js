@@ -3,16 +3,16 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react';
 
 
-function createPost() {
-  const [data, setData] = useState([
+function CreatePost() {
+  const [data, setData] = React.useState([
     {role:'Full Stack Developer',worktime:'', pay:'',link:'', linknote:'', note:'',noofposition:''},
   ]);
- const [loading,setLoading]=useState(false);
- const [about,setAbout]=useState('');
- const [companyName,setCompanyName]=useState('');
- const [companyLink,setCompanyLink]=useState('');
- const [aboutCompany,setAboutCompany]=useState('');
- const [endNote,setEndNote]=useState('');
+ const [loading,setLoading]=React.useState(false);
+ const [about,setAbout]=React.useState('');
+ const [companyName,setCompanyName]=React.useState('');
+ const [companyLink,setCompanyLink]=React.useState('');
+ const [aboutCompany,setAboutCompany]=React.useState('');
+ const [endNote,setEndNote]=React.useState('');
 
  
 
@@ -181,5 +181,5 @@ function createPost() {
   );
 }
 
-export default createPost;
+export default CreatePost;
 //${!about || !data.role || !companyName || !companyLink && 'bg-opacity-80'}

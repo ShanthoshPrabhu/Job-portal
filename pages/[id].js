@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 
 
-function singlePost() {
+function Postpage() {
   // console.log(data)
   const router = useRouter()
   const {id} =  router.query
@@ -259,7 +259,7 @@ async function getPostData (){
   )
 }
 
-export default singlePost
+export default Postpage
 
 export const getStaticPaths = async () => {
   let posts = []
