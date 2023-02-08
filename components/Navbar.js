@@ -9,16 +9,20 @@ import { userState } from '@/atom/userAtom';
 import { useSession } from 'next-auth/react';
 import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { userCurrentStatus } from '@/atom/userStatusAtom';
 
 
 function Navbar() {
   const [active,setActive]=useRecoilState(navbarState);
   const router = useRouter();
   const[user,setUser]=useRecoilState(userState);
+  const[userStatus,setUserStatus]=useRecoilState(userCurrentStatus);
   const { data: session , status} = useSession();
   if(user.length === 0){
     getUsers()
   }
+  console.log('user?.alumni === null ',user?.alumni === null )
+{user?.alumni === null && setUserStatus(true)}
   console.log('uuuuser',user)
   async function getUsers(){
     const userRef = collection(db, "users");
@@ -33,6 +37,7 @@ function Navbar() {
       const usercheck = value?.filter(filteredusers =>filteredusers?.email == session?.user?.email)
       console.log('check',usercheck)
      if(usercheck && usercheck[0]){
+      
       // console.log('success')
       // console.log('usercheck[0]',usercheck[0])
     //  console.log()
@@ -54,6 +59,7 @@ function Navbar() {
         email:session?.user?.email,
         timestamp:serverTimestamp(),
         bookmarks:[],
+        alumni:null
     });
     getUsers();
     return
@@ -79,12 +85,14 @@ function Navbar() {
                     <MagnifyingGlassIcon className="h-6 w-6 " />
                   <div className=' hidden sm:inline'>Search</div>
                 </div>
-                {user?.isAlumini ? (
-                   <div className={` cursor-pointer flex space-x-3 p-2 items-center hover:bg-black hover:bg-opacity-20 hover:border-t-0 hover:rounded-lg ${active == 'profile' ? 'border-black border-t-4' : null}`} onClick={()=>{
+                {user?.alumni ? (
+                   <div className={` cursor-pointer flex space-x-3 p-2 items-center hover:bg-black hover:bg-opacity-20 hover:border-t-0 hover:rounded-lg ${active == 'newpost' ? 'border-black border-t-4' : null}`} onClick={()=>{
                     setActive('newpost')
-                    
+                    router.push('/create-post')
                   }}>
-                    <UserIcon className=' h-6 w-6 '/>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                      <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+                    </svg>
                     <div className=' hidden sm:inline'>New post</div>
                   </div>
                 ):null}
@@ -104,3 +112,4 @@ function Navbar() {
 
 export default Navbar
 //backdrop-filter backdrop-blur-lg bg-opacity-30
+

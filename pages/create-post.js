@@ -1,5 +1,8 @@
+import Navbar from '@/components/Navbar';
 import { db } from '@/firebase';
+import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 
@@ -13,7 +16,7 @@ function CreatePost() {
  const [companyLink,setCompanyLink]=React.useState('');
  const [aboutCompany,setAboutCompany]=React.useState('');
  const [endNote,setEndNote]=React.useState('');
-
+ const router =useRouter();
  
 
   const wTime = []  
@@ -28,7 +31,7 @@ function CreatePost() {
  const user = {
   name:'Shanthosh Prabhu',
   email:'ashanthoshprabhu@gmail.com',
-  isAlumini:true,
+  isAlumni:true,
   id:12345678907,
   contact:356789543928
  }
@@ -90,7 +93,15 @@ function CreatePost() {
 
   return (
     <div className=' xl:w-[900px] lg:ml-[62px] lg:mr-[62px] xl:mx-[309px] mx-0 my-10 min-w-[400px] border-none text-[#37352fa6] mb-40'>
-        <div className=' flex p-2  m-5 font-sans'>
+      <div className='absolute left-0 top-0 m-2'>
+      <div
+          className=" w-9 h-9 flex items-center justify-center cursor-pointer "
+          onClick={() => router.push("/")}
+        >
+          <ArrowLeftIcon className="h-5 " />
+        </div>
+      </div>
+        <div className=' flex p-2  m-5 mt-16 font-sans'>
           <label className=' w-[100px] font-semibold pt-2'>About </label>
           <textarea type="text"  name="about" placeholder='empty' className=' w-[82%] text-black bg-[#FBFBFA] active:bg-white hover:bg-[#EDECE9] focus:shadow-lg focus:scale-105 h-[110px] ml-2 px-2 py-2 rounded-md text-base outline-none border-none ' value={about} onChange={(e) => setAbout(e.target.value)}/>
         </div>
@@ -173,6 +184,7 @@ function CreatePost() {
                 <textarea type="text" placeholder='empty (optional)'  name="finalnote" value={endNote} onChange={e=>setEndNote(e.target.value)} className=' w-[300px] h-[90px]  text-black ml-2 px-2 py-2 rounded-md text-base outline-none border-none active:bg-white bg-[#FBFBFA] hover:bg-[#EDECE9] focus:shadow-lg focus:scale-105' />
             </div>
         </div>
+        
        </div>
        <button className={`ml-8 mb-3 px-6 hover:scale-105 group flex items-center rounded-md bg-black text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm `} disabled={!about || !companyName || !companyLink || wTime.length == 0 || wTime.length != data.length} onClick={uploadPost}>
         Upload post
