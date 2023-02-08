@@ -44,7 +44,7 @@ function User() {
    
   return (
     <div className='relative space-y-8 m-5 '>
-        <div className='flex  items-center space-x-3'>
+        <div className='flex  items-center space-x-3 pb-6 border-b-2 border-gray-300'>
             <div className=' m-2'>
                 <img src={user?.image} alt="" className=' w-12 h-12 rounded-full' />
             </div>
