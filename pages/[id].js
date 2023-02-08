@@ -6,27 +6,70 @@ import Moment from 'react-moment';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/atom/userAtom';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 
 
-function singlePost({id}) {
+function singlePost() {
   // console.log(data)
+  const router = useRouter()
+  const {id} =  router.query
+//  console.log(' router.query', router.query)
   const { data: session , status} = useSession();
   const[user,setUser]=useRecoilState(userState);
   const[data,setData]=useState([]);
   const [bookmark,setBookmark]=useState(false);
-console.log(id)
+  const saved = []
+console.log('heyhey',id)
 console.log('session ',session )
-useEffect(()=>{
-  if(id){
-    getPostData()
-  }
-},[id])
+if(user.length === 0){
+  getUsers()
+  return
+}
+if(data.length === 0 && id){
+  getPostData();
+  // const value = user?.bookmarks?.filter(mark => mark == id)
+  // // console.log('value',value);
+  // if(value == id){
+  //    setBookmark(true)
+  //    return
+  // }else{
+  //   setBookmark(false)
+  //   return
+  // }
+  return
+}
+console.log('user',user)
 async function getPostData (){
   const docRef = doc(db,"posts",id);
   const docSnap = await getDoc(docRef);
    setData(docSnap.data())
  }
+ function checkSaved(){
+  const value = user?.bookmarks?.filter(mark => mark == id)
+  saved.push(value)
+//   if(value){
+//    return setBookmark(true)
+//  }else {
+//   return setBookmark(false)
+//  }
+ }
+ if(user?.bookmarks?.length != 0){
+   checkSaved()
+ }
+ console.log('saved[0] == id',saved[0] == id)
+
+//  useEffect(()=>{
+//   const value = user?.bookmarks?.filter(mark => mark == id)
+//   // console.log('value',value);
+//   if(value == id){
+//      setBookmark(true)
+//      return
+//   }else{
+//     setBookmark(false)
+//     return
+//   }
+//  },[user])
 
  async function getUsers(){
   const userRef = collection(db, "users");
@@ -50,44 +93,45 @@ async function getPostData (){
   })
   
  }
+//  useEffect(
+//   () =>
+//     setBookmark(
+//      user?.bookmarks?.filter(mark => mark == id)
+//     ),
+//   [user]
+// );
 
-useEffect(()=>{
-  const value = user?.bookmarks?.filter(mark => mark == id)
-  // console.log('value',value);
-  if(value == id){
-     setBookmark(true)
-     return
-  }else{
-    setBookmark(false)
-    return
-  }
- },[user])
+// useEffect(()=>{
+//   const value = user?.bookmarks?.filter(mark => mark == id)
+//   // console.log('value',value);
+//   if(value == id){
+//      setBookmark(true)
+//      return
+//   }else{
+//     setBookmark(false)
+//     return
+//   }
+//  },[])
 
-useEffect(()=>{
-  getUsers()
-},[])
+
   console.log(data)// 
   async function addToSaved(){
     console.log('b',bookmark)
-    setBookmark(true)
     console.log('user?.userId',user?.userId)
     await updateDoc(doc(db, "users", user?.userId),{
       bookmarks:arrayUnion(id)
     });
     getUsers()
-    setBookmark(true)
     return
    }
 
    async function removeFromSaved(){
     // console.log('hey')
-    setBookmark(false)
     console.log('user?.userId',user?.userId)
     await updateDoc(doc(db, "users", user?.userId),{
       bookmarks:arrayRemove(id)
     });
     getUsers()
-    setBookmark(false)
     return
    }
  
@@ -102,7 +146,7 @@ useEffect(()=>{
           <ArrowLeftIcon className="h-5 " />
         </div>
           <div className=''>
-           {bookmark ? (
+           {saved[0] == id ? (
              <button className=' rounded-lg px-4 pb-1 pt-[3px] m-2 bg-black text-white ' onClick={removeFromSaved}>Remove from saved</button>
            ):(
              <button className=' rounded-lg px-4 pb-1 pt-[3px] m-2 bg-black text-white ' onClick={addToSaved}>Save</button>
@@ -208,6 +252,7 @@ useEffect(()=>{
          
       </div>
     </div> 
+    // <div>hi</div>
     // <div>
     //   <button className='p-2 bg-pink-200' onClick={getPostData}>Getdata</button>
     // </div>

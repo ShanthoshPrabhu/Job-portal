@@ -4,15 +4,27 @@ import { db } from '@/firebase';
 import { userState } from '@/atom/userAtom';
 import { useRecoilState } from 'recoil';
 import Post from '@/components/Post';
+import { useRouter } from 'next/router';
+import Navbar from '@/components/Navbar';
 
-function User({id}) {
+function User() {
     const[user,setUser]=useRecoilState(userState);
     const [data, setData] = useState([]);
+    const router = useRouter();
+    const {id} = router.query
    console.log(id)
+   console.log('user',user)
+  //  if(!user.length){
+  //   getUserdata()
+  //   return
+  //  }
+  useEffect(()=>{
+    getUserdata()
+  },[])
     async function getUserdata(){
-        const docRef = doc(db, "users",id);
-        const docSnap = await getDoc(docRef);
-        setUser(docSnap.data());
+        // const docRef = doc(db, "users",id);
+        // const docSnap = await getDoc(docRef);
+        // setUser(docSnap.data());
         if (!user || !user.bookmarks) return;
         let promises = [];
         user.bookmarks.forEach((value) => {
@@ -29,9 +41,7 @@ function User({id}) {
     }
     console.log(user)
     console.log(data)
-    useEffect(()=>{
-      getUserdata()
-    },[id])
+   
   return (
     <div className='relative space-y-8 m-5 '>
         <div className='flex  items-center space-x-3'>
@@ -61,6 +71,7 @@ function User({id}) {
                 <h1  className=' m-2 font-bold text-lg'>No saved posts</h1>
             )}
         </div>
+        <Navbar/>
     </div>
   )
 }

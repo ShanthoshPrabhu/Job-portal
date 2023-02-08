@@ -21,48 +21,52 @@ export default function Home({providers}) {
   const [active,setActive]=useRecoilState(navbarState);
   const[user,setUser]=useRecoilState(userState);
    console.log(session)
+   console.log('user',user)
 
   if (!session) return <Login providers={providers} />;
-  
-  async function getUsers(){
-    const userRef = collection(db, "users");
+  // if(user.length === 0){
+  //   getUsers()
+  //   return
+  // }
+  // async function getUsers(){
+  //   const userRef = collection(db, "users");
     
-    getDocs(userRef).then((snapshot)=>{
+  //   getDocs(userRef).then((snapshot)=>{
      
-      let value=[]
-      snapshot.docs.forEach((doc)=>{
-        value.push({...doc.data(),userId:doc.id})
-      })
-      // console.log('value',value)
-      const usercheck = value?.filter(filteredusers =>filteredusers?.email == session?.user?.email)
-      console.log('check',usercheck)
-     if(usercheck && usercheck[0]){
-      // console.log('success')
-      // console.log('usercheck[0]',usercheck[0])
-    //  console.log()
-      return setUser(usercheck[0]);
-     } else{
-      return addUser();
-     }
-    })
+  //     let value=[]
+  //     snapshot.docs.forEach((doc)=>{
+  //       value.push({...doc.data(),userId:doc.id})
+  //     })
+  //     // console.log('value',value)
+  //     const usercheck = value?.filter(filteredusers =>filteredusers?.email == session?.user?.email)
+  //     console.log('check',usercheck)
+  //    if(usercheck && usercheck[0]){
+  //     // console.log('success')
+  //     // console.log('usercheck[0]',usercheck[0])
+  //   //  console.log()
+  //     return setUser(usercheck[0]);
+  //    } else{
+  //     return addUser();
+  //    }
+  //   })
     
-   }
-  async function addUser(){
-    if(!session){ 
-      return
-    } else {
-      const addData = await addDoc(collection(db, "users"), {  
-        image:session?.user?.image,
-        name:session?.user.name,
-        id:session?.user.uid,
-        email:session?.user?.email,
-        timestamp:serverTimestamp(),
-        bookmarks:[],
-    });
-    getUsers();
-    return
-    }
-  }
+  //  }
+  // async function addUser(){
+  //   if(!session){ 
+  //     return
+  //   } else {
+  //      await addDoc(collection(db, "users"), {  
+  //       image:session?.user?.image,
+  //       name:session?.user.name,
+  //       id:session?.user.uid,
+  //       email:session?.user?.email,
+  //       timestamp:serverTimestamp(),
+  //       bookmarks:[],
+  //   });
+  //   getUsers();
+  //   return
+  //   }
+  // }
   // useEffect(()=>{
   // //  {status === "authenticif(!session) return
   // if(session){

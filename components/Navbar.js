@@ -6,12 +6,59 @@ import { navbarState } from '@/atom/navbarAtom';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { userState } from '@/atom/userAtom';
+import { useSession } from 'next-auth/react';
+import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 
 function Navbar() {
   const [active,setActive]=useRecoilState(navbarState);
   const router = useRouter();
   const[user,setUser]=useRecoilState(userState);
+  const { data: session , status} = useSession();
+  if(user.length === 0){
+    getUsers()
+  }
+  console.log('uuuuser',user)
+  async function getUsers(){
+    const userRef = collection(db, "users");
+    
+    getDocs(userRef).then((snapshot)=>{
+     
+      let value=[]
+      snapshot.docs.forEach((doc)=>{
+        value.push({...doc.data(),userId:doc.id})
+      })
+      // console.log('value',value)
+      const usercheck = value?.filter(filteredusers =>filteredusers?.email == session?.user?.email)
+      console.log('check',usercheck)
+     if(usercheck && usercheck[0]){
+      // console.log('success')
+      // console.log('usercheck[0]',usercheck[0])
+    //  console.log()
+      return setUser(usercheck[0]);
+     } else{
+      return addUser();
+     }
+    })
+    
+   }
+  async function addUser(){
+    if(!session){ 
+      return
+    } else {
+       await addDoc(collection(db, "users"), {  
+        image:session?.user?.image,
+        name:session?.user.name,
+        id:session?.user.uid,
+        email:session?.user?.email,
+        timestamp:serverTimestamp(),
+        bookmarks:[],
+    });
+    getUsers();
+    return
+    }
+  }
   return (
     <div className="group xl:mx-[393px]  max-w-7xl w-[360px] sm:w-[500px] md:w-[700px] lg:w-[750px] xl:w-[780px] fixed rounded-full z-10 backdrop-filter backdrop-blur-lg bg-opacity-30 bottom-10">
       {/* <div className="absolute -inset-1 -z-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur opacity-10 "></div> */}

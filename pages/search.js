@@ -3,6 +3,9 @@ import { collection, query, where, getDocs, onSnapshot, orderBy } from "firebase
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { db } from '@/firebase';
 import { useRouter } from 'next/router';
+import Navbar from '@/components/Navbar';
+import Moment from 'react-moment';
+import moment from 'moment';
 
 
 
@@ -20,6 +23,8 @@ function search() {
       }
     )
   }
+  
+ 
   async function handleSearch () {
     
     console.log('posts',posts)
@@ -58,19 +63,22 @@ useEffect(()=>{
       </div>
       </div>
       <div className='mt-5 w-11/12'>
-        {filteredPosts.map((post,i)=>(
-          <div className=' space-y-4 p-2 border-b-2 border-gray-300 hover:bg-[#EDECE9] cursor-pointer rounded-lg' key={i}  onClick={()=>router.push(`/${post?.id}`)}>
-             <div className='text-black font-semibold '>{post?.companyName}</div>
-            <div className=' grid grid-flow-row grid-cols-3 space-x-4 mx-2'>
+        {filteredPosts.map((post,i)=>{
+          <div className=' space-y-4 p-2 border-b-2 border-gray-300 hover:bg-[#EDECE9] cursor-pointer ' key={i}  onClick={()=>router.push(`/${post?.id}`)}>
+             <div className='text-black font-semibold lg:text-base xl:text-lg'>{post?.companyName}</div>
+            <div className=' grid grid-flow-row-dense grid-cols-3 m-3'>
             {post.category.map((value,index)=>(
-              <div className=' text-black text-opacity-80 text-xs flex justify-center items-center py-2 rounded-md shadow-md' key={index} >{value}</div>
+             
+              <div className=' text-black text-xs flex justify-center space-y-3 items-center py-2 p-2 m-2 rounded-md shadow-md' key={index} >{value}</div>
              ))}
             </div>
-             <div className=' text-[#37352fa6] text-xs font-semibold'>Posted ....</div>
+             <div className=' text-[#37352fa6] text-xs font-semibold'>Posted {formattedDate}</div>
           </div>
-        ))}
+          
+})}
       </div>
-    {/* <button onClick={} className=' p-2 font-semibold'>Search</button> */}
+      <Navbar/>
+    {/* <button onClick={} className=' p-2 font-semibold'>Search</button> <Moment fromNow>{post?.timestamp?.toDate()}</Moment> */}
     </div>
   );
 }
@@ -150,3 +158,17 @@ export default search
 //   "postedBy": "Shanthosh Prabhu"
 // }
 // ]
+
+// const currentDate = new Date();
+          // const timestamp = new Date(post.timestamp);
+          // const tenDaysInMilliseconds = 10 * 24 * 60 * 60 * 1000;
+
+          // let formattedDate;
+          // if (currentDate - timestamp >= tenDaysInMilliseconds) {
+          //   formattedDate = moment(timestamp).format("MMM YYYY");
+          // } else {
+          //   formattedDate = moment(timestamp).fromNow();
+          // }
+          // return (
+            
+          // )
