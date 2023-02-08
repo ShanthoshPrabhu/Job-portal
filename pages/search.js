@@ -46,6 +46,7 @@ function Search() {
   React.useEffect(()=>{
    getData()
 },[])
+
   return (
     <div className=' flex flex-col justify-center px-6 sm:px-20 md:px-28 lg:px-36 xl:px-44 items-center '>
       <div className=" z-50 ml-2 mt-5 w-11/12 lg:w-[550px] xl:w-[750px]">
@@ -62,21 +63,28 @@ function Search() {
         />
       </div>
       </div>
-      <div className='mt-5 w-11/12'>
+      {filteredPosts ? (
+        <div className='mt-5 w-11/12'>
         {filteredPosts.map((post,i)=>{
+
+        const colorArray = ['#fee2e2', '#fce7f3', '#dbeafe', '#ede9fe', '#d1fae5', '#fef3c7', '#ffedd5', '#fef3c7', '#f5f5f5', '#d1fae5'];
+        const shuffledArray = colorArray.sort(() => Math.random() - 0.5);
+
+         return (
           <div className=' space-y-4 p-2 border-b-2 border-gray-300 hover:bg-[#EDECE9] cursor-pointer ' key={i}  onClick={()=>router.push(`/${post?.id}`)}>
-             <div className='text-black font-semibold lg:text-base xl:text-lg'>{post?.companyName}</div>
-            <div className=' grid grid-flow-row-dense grid-cols-3 m-3'>
-            {post.category.map((value,index)=>(
-             
-              <div className=' text-black text-xs flex justify-center space-y-3 items-center py-2 p-2 m-2 rounded-md shadow-md' key={index} >{value}</div>
-             ))}
-            </div>
-             <div className=' text-[#37352fa6] text-xs font-semibold'>Posted <Moment fromNow>{post?.timestamp?.toDate()}</Moment></div>
-          </div>
+          <div className='text-black font-semibold lg:text-base xl:text-lg'>{post?.companyName}</div>
+         <div className=' grid grid-flow-row-dense grid-cols-3 m-3'>
+         {post.category.map((value,index)=>(
           
-})}
+           <div className=' text-black text-xs flex justify-center space-y-3 items-center py-2 p-2 m-2 rounded-md shadow-md' key={index} style={{ backgroundColor: shuffledArray[index % shuffledArray.length] }} >{value}</div>
+          ))}
+         </div>
+          <div className=' text-[#37352fa6] text-xs font-semibold'>Posted <Moment fromNow>{post?.timestamp?.toDate()}</Moment></div>
+       </div>
+         )
+        })}
       </div>
+      ):null}
       <Navbar/>
     {/* <button onClick={} className=' p-2 font-semibold'>Search</button> <Moment fromNow>{post?.timestamp?.toDate()}</Moment> */}
     </div>
