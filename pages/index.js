@@ -31,6 +31,7 @@ export default function Home({providers}) {
   const[user,setUser]=useRecoilState(userState);
   const [selected, setSelected] = useState(userCStatus[0]);
   const[userStatus,setUserStatus]=useRecoilState(userCurrentStatus);
+  const [isAlumni,setIsAlumni]=useState(false)
   const[input,setInput]=useState('');
   let [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
@@ -40,8 +41,9 @@ export default function Home({providers}) {
 
   if (!session) return <Login providers={providers} />;
 
-  
-
+  console.log('user?.alumni === null ',user?.alumni === null )
+  {user?.alumni === null && setUserStatus(true)}
+ {user?.alumni === true || user?.alumni === false && setUserStatus(false)}
   function closeModal() {
     setUserStatus(false)
   }
@@ -55,18 +57,40 @@ export default function Home({providers}) {
     console.log(`selected.name == 'Alumni'`,selected.name == 'Alumni')
     console.log(`selected.name == 'Student'`,selected.name == 'Student')
     console.log(' user?.userId', user?.userId)
+    setUserStatus(false)
     if(selected.name == 'Alumni'){
       await updateDoc(doc(db, "users", user?.userId),{
         alumni:true
       });
+     router.reload('/')
     }
     if(selected.name == 'Student'){
       await updateDoc(doc(db, "users", user?.userId),{
         alumni:false
       });
+      router.reload('/')
     }
-    closeModal()
+   
   }
+
+  async function getUsers(){
+    const userRef = collection(db, "users");
+    
+    getDocs(userRef).then((snapshot)=>{
+     
+      let value=[]
+      snapshot.docs.forEach((doc)=>{
+        value.push({...doc.data(),userId:doc.id})
+      })
+      // console.log('value',value)
+      const usercheck = value?.filter(filteredusers =>filteredusers?.email == session?.user?.email)
+      console.log('check',usercheck)
+     if(usercheck && usercheck[0]){
+      return setUser(usercheck[0]);
+     } 
+    })
+    
+   }
 
   return (
     < >
@@ -113,7 +137,8 @@ export default function Home({providers}) {
                         Are you a student or an alumni? If you're an alumni kindly enter your e-mail below 
                       </span>
                     </div>
-                    <div className="flex flex-col mt-10">
+                    {selected.name == 'Alumni' ? (
+                      <div className="flex flex-col mt-10">
                       <span className="flex font-semibold text-sm md:text-base lg:text-xl">
                        E-mail
                       </span>
@@ -126,6 +151,8 @@ export default function Home({providers}) {
                         />
                       </div>
                     </div>
+                    ):null}
+                    
                     <div className="flex flex-col mt-10 ">
                     <Listbox value={selected} onChange={setSelected}>
                     <div className="relative mt-1">
@@ -178,15 +205,27 @@ export default function Home({providers}) {
                     </div>
                   </Listbox>
                     </div>
-                    <div className="flex justify-center mt-10">
+                    {selected.name == 'Alumni' ?(
+                      <div className="flex justify-center mt-10">
                       <button
-                        className={`inline-flex justify-center rounded-md border border-transparent cursor-pointer ${!input ? ' bg-opacity-20 text-opacity-30 cursor-auto' : null} bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2  p-2 ml-[30px]`}
+                        className={`inline-flex justify-center rounded-md border border-transparent cursor-pointer ${!input ? ' bg-opacity-20 text-opacity-30 cursor-auto' : null} bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2  p-2 `}
                         disabled={!input}
                         onClick={addData}
                       >
                         Confirm
                       </button>
+                      </div>
+                    ): (
+                      <div className="flex justify-center mt-10">
+                      <button
+                        className={`inline-flex justify-center rounded-md border border-transparent cursor-auto bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2  p-2 `}
+                        onClick={addData}
+                      >
+                        Confirm
+                      </button>
                     </div>
+                    )}
+                   
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
