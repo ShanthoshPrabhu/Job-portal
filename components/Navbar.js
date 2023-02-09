@@ -112,4 +112,3 @@ function Navbar() {
 
 export default Navbar
 //backdrop-filter backdrop-blur-lg bg-opacity-30
-

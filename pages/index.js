@@ -59,15 +59,13 @@ export default function Home({providers}) {
       await updateDoc(doc(db, "users", user?.userId),{
         alumni:true
       });
-      closeModal()
     }
     if(selected.name == 'Student'){
       await updateDoc(doc(db, "users", user?.userId),{
         alumni:false
       });
-      closeModal()
     }
-    
+    closeModal()
   }
 
   return (

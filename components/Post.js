@@ -2,8 +2,8 @@ import React from 'react'
 
 function Post({id,post}) {
     // console.log(key)
-    console.log(id)
-    console.log(post)
+    // console.log(id)
+    // console.log(post)
 //grid grid-flow-row grid-cols-1
 const textColors = [' #dc2626','']
 const colorArray = ['#fee2e2', '#fce7f3', '#dbeafe', '#ede9fe', '#d1fae5', '#fef3c7', '#ffedd5', '#fef3c7', '#f5f5f5', '#d1fae5'];
