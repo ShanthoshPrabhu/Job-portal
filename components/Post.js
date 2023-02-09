@@ -1,4 +1,5 @@
 import React from 'react'
+import Moment from 'react-moment';
 
 function Post({id,post}) {
     // console.log(key)
@@ -31,6 +32,7 @@ const shuffledArray = colorArray.sort(() => Math.random() - 0.5);
         {post?.about}
       </div>
       </div>
+      <div className=' text-[#37352fa6] text-xs font-semibold'>Posted <Moment fromNow>{post?.timestamp?.toDate()}</Moment></div>
       </a>
     </div>
   )

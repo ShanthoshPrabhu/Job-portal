@@ -155,7 +155,7 @@ async function getPostData (){
         </div>
       </div>
       <div className='px-3 m-4 mb-2 font-medium text-gray-900 md:text-sm lg:text-base text-opacity-60 text-sm'>
-        <div className=' '>Posted by</div>
+        <div className=' '>Posted by {data?.postedBy}</div>
         <div className=''>Posted <Moment fromNow>{data?.timestamp?.toDate()}</Moment></div>
       </div>
       <div className='px-3 m-3 mt-5'>

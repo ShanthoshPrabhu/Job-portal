@@ -21,8 +21,7 @@ function Navbar() {
   if(user.length === 0){
     getUsers()
   }
-  console.log('user?.alumni === null ',user?.alumni === null )
-{user?.alumni === null && setUserStatus(true)}
+
   console.log('uuuuser',user)
   async function getUsers(){
     const userRef = collection(db, "users");
